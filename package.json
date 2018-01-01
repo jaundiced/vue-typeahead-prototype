@@ -16,6 +16,7 @@
     "bootstrap": "^3.3.7",
     "uiv": "^0.15.4",
     "vue": "^2.5.2",
+    "vue-bulma-typeahead": "0.0.7",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
