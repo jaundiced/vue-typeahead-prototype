@@ -22,42 +22,48 @@
                     <li v-for="item in vendorContractFilters" :key=item.id>Name: {{item.name}} (ID: {{item.id}})</li>
             </ul>
         </section>
-        <data-service />
     </div>
     </template>
 
 
 
 <script>
-import DataService from "@/components/DataService";
+
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: "Test",
-  components: { DataService },
+  components: {  },
   data() {
     return {
       selectedVendor: "",
       selectedVendorContract: "",
       selectedVendorContractFilter: "",
-      vendors: [],
-      contracts: [],
-      contractFilters: [],
-      vendorContracts:[],
-      vendorContractFilters: []
+      //vendorContracts:[],
+      //vendorContractFilters: []
     };
   },
+  computed: mapGetters({
+    vendors: 'allVendors',
+    contracts: 'allContracts',
+    contractFilters: 'allFilters',
+    vendorContracts: 'allVendorContracts',
+    vendorContractFilters: 'allVendorContractFilters'
+  }),
   mounted() {
     this.target = this.$refs.input;
   },
+  /*
   created: function() {
     this.vendors = DataService.data().vendors;
     this.contracts = DataService.data().contracts;
     this.contractFilters = DataService.data().contractFilters;
-  },
+  },*/
   watch: {
     selectedVendor:  _.debounce( 
         function(selectedVendor) {
             this.selectedVendorContract = '';
-            this.vendorContracts  = this.getContracts(selectedVendor.id);
+            //this.vendorContracts  = this.getContracts(selectedVendor.id);
+            this.selectVendor(selectedVendor);
             console.log('selectedVendor');
         },
       // This is the number of milliseconds we wait for the user to stop typing.
@@ -65,33 +71,17 @@ export default {
     ),
     selectedVendorContract:  _.debounce( 
         function(selectedVendorContract) {
-            this.vendorContractFilters = this.getContractFilters(selectedVendorContract.id);
+            //this.vendorContractFilters = this.getContractFilters(selectedVendorContract.id);
+            this.selectContract(selectedVendorContract);
             console.log('selectedVendorContract, ID: ' + selectedVendorContract.id);
         },
       // This is the number of milliseconds we wait for the user to stop typing.
       250
     )
   },
-  methods: {
-    getContracts: function(vendorId) {
-        var vc = [];
-                for(var i=0; i < this.contracts.length; i++){
-                    if(this.contracts[i].vendorId == vendorId){
-                        vc.push(this.contracts[i]);
-                    }
-                }
-                console.log("Vendor ID: " + vendorId + " = " + vc.length + " vendor contracts")
-                return vc;
-      },
-      getContractFilters: function(contractId){
-                var cf = [];
-                for(var i=0; i < this.contractFilters.length; i++){
-                    if(this.contractFilters[i].contractId == contractId){
-                        cf.push(this.contractFilters[i]);
-                    }
-                }
-                return cf;
-      }
-  }
-};
+  methods: mapActions([
+    'selectVendor',
+    'selectContract'
+  ])
+ };
 </script>
